@@ -2,13 +2,35 @@
 <html>
 <head>
   <title>IpaDeliverer</title>
+  <link rel="stylesheet" type="text/css" href="http://railsgirls.com/assets/bootstrap.css">
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
+
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="/">Ipa Uploader</a>
+      <ul class="nav">
+        <li class="active"><a href="/projects">Ipas</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <body>
 
-<%= yield %>
+<div class="container"> 
+	<%= yield %>
+</div>
 
 </body>
+
+
+<footer>
+  <div class="container">
+    Ernesto Carrión
+  </div>
+</footer>
 </html>
