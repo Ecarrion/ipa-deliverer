@@ -1,2 +1,0 @@
-class UploadController < ApplicationController
-end
