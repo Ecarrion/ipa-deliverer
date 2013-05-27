@@ -11,9 +11,9 @@ class Project < ActiveRecord::Base
  	  assetsArray = [uploadInfo]
  	  
  	  ipaInfo = Hash.new
- 	  ipaInfo['bundle-identifier'] = 'com.hp.snapfish'
+ 	  ipaInfo['bundle-identifier'] = 'com.hp.Snapfish'
  	  ipaInfo['bundle-version'] = '1.6'
- 	  ipaInfo['kind'] = 'Software'
+ 	  ipaInfo['kind'] = 'software'
  	  ipaInfo['title'] = 'Snapfish'
  	  
  	  itemsArray = [{'assets' => assetsArray, 'metadata' => ipaInfo}]

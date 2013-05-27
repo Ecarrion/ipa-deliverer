@@ -7,7 +7,7 @@
 
 <p>
   <b>Ipa:</b>
-  <%= link_to "Download ipa", "itms-services://?action=download-manifest&amp;url=#{request.protocol}#{request.host_with_port}{@project.ipa_url}.plist" if @project.ipa.present? %>
+  <%= link_to "Download ipa", "itms-services://?action=download-manifest&amp;url=#{request.protocol}#{request.host_with_port}#{@project.ipa_url}.plist" if @project.ipa.present? %>
 </p>
 
 
