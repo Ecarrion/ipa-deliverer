@@ -25,7 +25,7 @@ class ProjectsController < ApplicationController
   # GET /projects/new.json
   def new
     @project = Project.new
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @project }
@@ -44,8 +44,15 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
-        format.json { render json: @project, status: :created, location: @project }
+        rootPath = "#{request.protocol}#{request.host_with_port}"
+        if @project.create_plist_in_url(rootPath)
+          format.html { redirect_to @project, notice: 'Project was successfully created.' }
+          format.json { render json: @project, status: :created, location: @project }  
+        else
+          @project.destroy
+          flash[:error] = 'Error linking ipa'
+          format.html { render action: "new"}
+        end
       else
         format.html { render action: "new" }
         format.json { render json: @project.errors, status: :unprocessable_entity }

@@ -4,7 +4,7 @@
   <title>IpaDeliverer</title>
   <link rel="stylesheet" type="text/css" href="http://railsgirls.com/assets/bootstrap.css">
   <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "application" %>         
   <%= csrf_meta_tags %>
 </head>
 
@@ -20,8 +20,10 @@
 </div>
 
 <body>
-
+	
 <div class="container"> 
+	<p id="notice"><%= flash[:notice] %></p>
+	<p id="error"><%= flash[:error] %></p>
 	<%= yield %>
 </div>
 

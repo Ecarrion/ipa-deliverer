@@ -12,7 +12,9 @@
 <% @projects.each do |project| %>
   <tr>
     <td><%= project.name %></td>
-    <td><%= link_to "Download ipa", project.ipa_url if project.ipa.present? %></td>
+
+    <td><%= link_to "Download ipa", "itms-services://?action=download-manifest&amp;url=#{request.protocol}#{request.host_with_port}#{project.ipa_url}.plist" if project.ipa.present? %></td>
+
     <td><%= link_to 'Show', project %></td>
     <td><%= link_to 'Edit', edit_project_path(project) %></td>
     <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
