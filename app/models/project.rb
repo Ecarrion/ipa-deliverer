@@ -14,8 +14,18 @@ class Project < ActiveRecord::Base
  	  unzippedPath = "public/uploads/project/ipa/#{self.id}"
  	  unzip_file(ipaPath, unzippedPath)
  	  
+ 	  #Search for a *.app file
+ 	  appName = ""
+ 	  Dir.foreach("#{unzippedPath}/Payload") do |fname|
+ 	    ext = File.extname(fname)
+ 	    if ext == ".app"
+ 	      appName = fname
+ 	      break;
+ 	    end
+    end
+ 	  
  	  #Read propper plist info from ipa
- 	  infoPlistPath = "#{unzippedPath}/Payload/Snapfish.app/Info.plist"
+ 	  infoPlistPath = "#{unzippedPath}/Payload/#{appName}/Info.plist"
  	  plistObject = CFPropertyList::List.new
  	  plistObject = CFPropertyList::List.new(:file => infoPlistPath)
  	  infoPlist = CFPropertyList.native_types(plistObject.value)
