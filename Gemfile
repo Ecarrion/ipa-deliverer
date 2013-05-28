@@ -7,7 +7,7 @@ gem 'rails', '3.2.13'
 
 gem 'sqlite3'
 gem 'carrierwave'
-gem 'plist'
+gem 'CFPropertyList'
 gem 'rubyzip'
 
 # Gems used only for assets and not required

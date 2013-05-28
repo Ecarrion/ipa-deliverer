@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'zip/zip'
+require 'cfpropertylist'
 
 class Project < ActiveRecord::Base
 
@@ -8,26 +9,41 @@ class Project < ActiveRecord::Base
  	
  	def create_plist_in_url(url)
  	  
- 	    ipaPath = "public#{self.ipa}"
- 	    unzip_file(ipaPath, "unzipped")
+ 	  #Unzip ipa content in desired path
+ 	  ipaPath = "public#{self.ipa}"
+ 	  unzippedPath = "public/uploads/project/ipa/#{self.id}"
+ 	  unzip_file(ipaPath, unzippedPath)
  	  
- 	    uploadInfo = Hash.new
- 	    uploadInfo['kind'] = 'software-package'
- 	    uploadInfo['url'] = "#{url}#{self.ipa}"
- 	    assetsArray = [uploadInfo]
+ 	  #Read propper plist info from ipa
+ 	  infoPlistPath = "#{unzippedPath}/Payload/Snapfish.app/Info.plist"
+ 	  plistObject = CFPropertyList::List.new
+ 	  plistObject = CFPropertyList::List.new(:file => infoPlistPath)
+ 	  infoPlist = CFPropertyList.native_types(plistObject.value)
  	  
- 	    ipaInfo = Hash.new
- 	    ipaInfo['bundle-identifier'] = 'com.hp.Snapfish'
- 	    ipaInfo['bundle-version'] = '1.6'
- 	    ipaInfo['kind'] = 'software'
- 	    ipaInfo['title'] = 'Snapfish'
+ 	  #Delete Unzipped content
+    FileUtils.rm_rf("#{unzippedPath}/Payload")
  	  
- 	    itemsArray = [{'assets' => assetsArray, 'metadata' => ipaInfo}]
- 	    plistDic = {'items' => itemsArray}
+ 	  #Create new plist to download
+ 	  uploadInfo = Hash.new
+ 	  uploadInfo['kind'] = 'software-package'
+ 	  uploadInfo['url'] = "#{url}#{self.ipa}"
+ 	  assetsArray = [uploadInfo]
  	  
- 	    plistPath = "#{ipaPath}.plist"
- 	    File.open(plistPath, 'w') {|f| f.write(plistDic.to_plist)}
- 	    return true
+ 	  ipaInfo = Hash.new
+ 	  ipaInfo['bundle-identifier'] = infoPlist['CFBundleIdentifier']
+ 	  ipaInfo['bundle-version'] = infoPlist['CFBundleVersion']
+ 	  ipaInfo['kind'] = 'software'
+ 	  ipaInfo['title'] = infoPlist['CFBundleName'];
+ 	  
+ 	  itemsArray = [{'assets' => assetsArray, 'metadata' => ipaInfo}]
+ 	  plistDic = {'items' => itemsArray}
+ 	  
+ 	  plistPath = "#{ipaPath}.plist"
+ 	  plistObject = CFPropertyList::List.new
+ 	  plistObject.value = CFPropertyList.guess(plistDic)
+ 	  plistObject.save(plistPath, CFPropertyList::List::FORMAT_XML)
+ 	  
+ 	  return true
   end
   
   def delete_ipa_files
