@@ -45,17 +45,22 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.save
         rootPath = "#{request.protocol}#{request.host_with_port}"
+        
         if @project.create_plist_in_url(rootPath)
           format.html { redirect_to @project, notice: 'Project was successfully created.' }
           format.json { render json: @project, status: :created, location: @project }  
+          
         else
           @project.destroy
+          @project.delete_ipa_files
           flash[:error] = 'Error linking ipa'
           format.html { render action: "new"}
+          
         end
       else
         format.html { render action: "new" }
         format.json { render json: @project.errors, status: :unprocessable_entity }
+        
       end
     end
   end
