@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class Project < ActiveRecord::Base
 
 	mount_uploader :ipa, IpaUploader
@@ -21,6 +23,11 @@ class Project < ActiveRecord::Base
  	  
  	  path = "public#{self.ipa}.plist"
  	  File.open(path, 'w') {|f| f.write(plistDic.to_plist)}
+  end
+  
+  def delete_ipa_files
+    path = "public/uploads/project/ipa/#{self.id}"
+    FileUtils.rm_rf(path)
   end
  	
 end

@@ -40,8 +40,8 @@ class ProjectsController < ApplicationController
   # POST /projects
   # POST /projects.json
   def create
+    
     @project = Project.new(params[:project])
-
     respond_to do |format|
       if @project.save
         rootPath = "#{request.protocol}#{request.host_with_port}"
@@ -79,9 +79,11 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
+    
     @project = Project.find(params[:id])
     @project.destroy
-
+    @project.delete_ipa_files
+    
     respond_to do |format|
       format.html { redirect_to projects_url }
       format.json { head :no_content }
